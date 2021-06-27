@@ -1,6 +1,9 @@
+
+// THIS FILE IS NOT IN USE. ONLY AN EXAMPLE OF TARGETING RIGHT AUTHOR WHEN
+// EDITING AUTHORS BIRTHDATE BY TYPING RIGHT NAME INSTEAD OF REACT-SELECT
+
 import React, { useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import Select from 'react-select'
 
 export const ALL_AUTHORS = gql`
   query {
@@ -13,10 +16,10 @@ export const ALL_AUTHORS = gql`
 `
 
 export const EDIT_AUTHOR = gql`
-  mutation editAuthor($name: String!, $setBornTo: Int!) {
+  mutation editauthor($name: String!, $born: Int!) {
     editAuthor(
       name: $name,
-      setBornTo: $setBornTo
+      setBornTo: $born
     ) {
       name
       born
@@ -24,10 +27,8 @@ export const EDIT_AUTHOR = gql`
   }
 `
 
-let options = []
-
 const Authors = (props) => {
-  const [selectedOption, setSelectedOption] = useState(null)
+  const [name, setName] = useState('')
   const [newBorn, setNewBorn] = useState('')
 
   const result = useQuery(ALL_AUTHORS)
@@ -38,14 +39,11 @@ const Authors = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    let name = selectedOption.value
-    console.log(name)
-    console.log(typeof (name))
 
-    let setBornTo = parseInt(newBorn)
-    editAuthor({ variables: { name, setBornTo } })
+    const born = parseInt(newBorn)
+    editAuthor({ variables: { name, born } })
 
-    setSelectedOption(null)
+    setName('')
     setNewBorn('')
   }
 
@@ -58,12 +56,6 @@ const Authors = (props) => {
   }
   if (result.data) {
     const authors = result.data.allAuthors
-
-
-    authors.map(a => {
-      return options.push({ value: a.name, label: a.name })
-    }
-    )
 
     return (
       <div>
@@ -93,10 +85,9 @@ const Authors = (props) => {
 
         <form onSubmit={submit}>
           <div>
-            <Select
-              defaultValue={selectedOption}
-              onChange={setSelectedOption}
-              options={options}
+            <input
+              value={name} placeholder="name of the author"
+              onChange={({ target }) => setName(target.value)}
             />
           </div>
           <div>

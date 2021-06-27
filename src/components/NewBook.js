@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { ALL_BOOKS } from './Books'
-import { ALL_AUTHORS } from './Authors'
+import { ALL_AUTHORS } from './AuthorsNoSelect'
 
 const CREATE_BOOK = gql`
   mutation createbook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
